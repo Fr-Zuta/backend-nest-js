@@ -1,6 +1,8 @@
-import { Body, Controller, Delete, Get, Patch, Post, Put, Query, Req, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Req, Res, UsePipes, ValidationPipe } from "@nestjs/common";
 import type {Request, Response} from 'express';
 import path from "path";
+import { createProductoDto } from "src/dto/create-productos.dto";
+import { updateProductoDto } from "src/dto/update-productos.dto";
 import { ProductosService } from "src/services/productos.service";
 
 @Controller('/productos')
@@ -14,14 +16,21 @@ export class ProductosController {
     return this.productosService.getProductos();
   }
 
+  @Get('/:id')
+  getProducto(@Param('id') id: string){
+    return this.productosService.getproducto(parseInt(id));
+  }
+
+
   @Post()
-  createProducto(@Body() body: any){
-    return this.productosService.postProductos( body );
+  // @UsePipes( new ValidationPipe())
+  createProducto(@Body() body: createProductoDto){
+    return this.productosService.postProductos(body);
   }
 
   @Put()
-  updateProducto(){
-    return this.productosService.putProductos();
+  updateProducto(@Body() body: updateProductoDto){
+    return this.productosService.putProductos(body);
   }
 
   @Delete()

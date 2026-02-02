@@ -1,4 +1,7 @@
-import { Get, Injectable } from '@nestjs/common';
+import { Get, Injectable, NotFoundException } from '@nestjs/common';
+import { NotFoundError } from 'rxjs';
+import { createProductoDto } from 'src/dto/create-productos.dto';
+import { updateProductoDto } from 'src/dto/update-productos.dto'; 
 
 export interface product {
   name: string,
@@ -16,14 +19,27 @@ export class ProductosService {
     return this.bady;
   }
 
-  postProductos( body: any) {
+  getproducto(id: number){
+    const productEncontrado = this.bady.find(body => body.id === id)
+    if(!productEncontrado){
+      // return ' el producto no se encuentra '
+      return new NotFoundException(`el producto con el DI: ${id} no fue encontrado`);
+    }
+    return productEncontrado
+  }
+
+  postProductos( body: createProductoDto) {
     
-    this.bady.push(body)
+    this.bady.push({
+      ...body,
+      id: this.bady.length + 1,
+    });
      
     return body
   }
 
-  putProductos(){
+  putProductos(body: updateProductoDto){
+    console.log(body)
     return 'actualizar producto'
   }
 
